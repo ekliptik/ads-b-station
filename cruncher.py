@@ -7,13 +7,16 @@ def main():
     for unformatted in fileinput.input():
         formatted = processLine(unformatted)
         msg = Message(formatted)
-        #print(msg.type)
-        if msg.type == "callsign":
-            # print(msg.callsign, end='\n')
-            print(pms.adsb.callsign(formatted))
-        elif msg.type == "surfPos":
-            print(pms.adsb.)
-    print('')
+        if not msg.type in ["bad", "other"]:
+            print(msg.ICAO, ": ", end='')
+            if msg.type == "callsign":
+                # print(msg.callsign, end='\n')
+                print(pms.adsb.callsign(formatted))
+            elif msg.type in ["surfPos", "airPosBaro", "airPosGNSS"]:
+                print(pms.adsb.airborne_position_with_ref(formatted, 49.8525, 14.7066))
+            elif msg.type == "airVel":
+                print(pms.adsb.speed_heading(formatted))
+            #print('')
 
 def processLine(i):
     out = []
